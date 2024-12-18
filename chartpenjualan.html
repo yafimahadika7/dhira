@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        body {
+            font-family: "Roboto", sans-serif;
+            margin: 20px;
+            color: #2f2f2f;
+        }
+
+        h1 {
+            font-family: "Montserrat", sans-serif;
+            color: #2f2f2f;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            color: #2f2f2f;
+        }
+
+        th,
+        td {
+            text-align: center;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .chart-container {
+            width: 75%;
+            margin: 0 auto;
+        }
+
+        .month-button,
+        #reset {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Sales Trend Analysis</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th rowspan="2" id="reset" title="Tampilkan Seluruh Bulan"></th>
+                <th colspan="13">Bulan</th>
+            </tr>
+            <tr>
+                <th class="month-button" onclick="updateChart(0)">Januari</th>
+                <th class="month-button" onclick="updateChart(1)">Februari</th>
+                <th class="month-button" onclick="updateChart(2)">Maret</th>
+                <th class="month-button" onclick="updateChart(3)">April</th>
+                <th class="month-button" onclick="updateChart(4)">Mei</th>
+                <th class="month-button" onclick="updateChart(5)">Juni</th>
+                <th class="month-button" onclick="updateChart(6)">Juli</th>
+                <th class="month-button" onclick="updateChart(7)">Agustus</th>
+                <th class="month-button" onclick="updateChart(8)">September</th>
+                <th class="month-button" onclick="updateChart(9)">Oktober</th>
+                <th class="month-button" onclick="updateChart(10)">November</th>
+                <th class="month-button" onclick="updateChart(11)">Desember</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2022</td>
+                <td>4,017</td>
+                <td>6,135</td>
+                <td>7,091</td>
+                <td>5,841</td>
+                <td>5,036</td>
+                <td>4,547</td>
+                <td>3,467</td>
+                <td>3,970</td>
+                <td>6,313</td>
+                <td>3,595</td>
+                <td>9,207</td>
+                <td>5,945</td>
+            </tr>
+            <tr>
+                <td>2023</td>
+                <td>2,416</td>
+                <td>4,136</td>
+                <td>7,935</td>
+                <td>8,004</td>
+                <td>9,505</td>
+                <td>5,026</td>
+                <td>6,108</td>
+                <td>6,343</td>
+                <td>9,404</td>
+                <td>9,280</td>
+                <td>9,287</td>
+                <td>8,689</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="chart-container">
+        <canvas id="salesChart"></canvas>
+    </div>
+
+    <script>
+        const data2022 = [4017, 6135, 7091, 5841, 5036, 4547, 3467, 3970, 6313, 3595, 9207, 5945];
+        const data2023 = [2416, 4136, 7935, 8004, 9505, 5026, 6108, 6343, 9404, 9280, 9287, 8689];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const reset = document.getElementById("reset");
+
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        let chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: '2022',
+                        data: data2022,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: '2023',
+                        data: data2023,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sales Report Graph'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 10000,
+                        ticks: {
+                            stepSize: 2500
+                        }
+                    },
+
+                }
+            }
+        });
+
+        function updateChart(monthIndex) {
+            chart.data.labels = [months[monthIndex]];
+            chart.data.datasets[0].data = [data2022[monthIndex]];
+            chart.data.datasets[1].data = [data2023[monthIndex]];
+            chart.update();
+        }
+
+        function resetChart() {
+            chart.data.labels = months;
+            chart.data.datasets[0].data = data2022;
+            chart.data.datasets[1].data = data2023;
+            chart.update();
+        }
+
+        reset.addEventListener("click", function () {
+            resetChart();
+        });
+    </script>
+</body>
+
+</html>
